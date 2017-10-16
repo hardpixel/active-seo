@@ -4,6 +4,7 @@ Optimize ActiveRecord models with support for SEO, Twitter and Open Graph meta.
 
 [![Gem Version](https://badge.fury.io/rb/active_seo.svg)](https://badge.fury.io/rb/active_seo)
 [![Build Status](https://travis-ci.org/hardpixel/active-seo.svg?branch=master)](https://travis-ci.org/hardpixel/active-seo)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4447eb1a073a93ace5b2/maintainability)](https://codeclimate.com/github/hardpixel/active-seo/maintainability)
 
 ## Installation
 
