@@ -1,18 +1,55 @@
 module ActiveSeo
-  # Config class
-  class SeoMeta < Hashie::Dash
-    property :title_field
-    property :description_field
+  class SeoMeta
+    attr_accessor :record, :config
+
+    # Initializer method
+    def initialize(record, config)
+      @record = record
+      @config = config
+    end
+
+    # Set base seo meta
+    def result
+      data = methods.select { |m| m.to_s.starts_with? 'seo_' }
+      data = data.map { |i| [i.to_s.sub('seo_', '').to_sym, send(i)] }
+
+      Hash[data]
+    end
+
+    def seo_title
+      attribute = :seo_title
+      defaults  = [:title, :name]
+
+      attribute_fallbacks_for(attribute, defaults, config.title_fallback)
+    end
+
+    def seo_description
+      attribute = :seo_description
+      defaults  = [:content, :description, :excerpt, :body]
+
+      attribute_fallbacks_for(attribute, defaults, config.description_fallback)
+    end
+
+    def seo_keywords
+      
+    end
+
+    def attribute_fallbacks_for(attribute, defaults, fallback)
+      candidates = [attribute]
+
+      case fallback
+      when TrueClass
+        candidates.concat(defaults)
+      when Array
+        candidates.concat(fallback)
+      end
+
+      attribute_fallbacks(candidates)
+    end
+
+    def attribute_fallbacks(candidates)
+      method = candidates.find { |item| record.try(item).present? }
+      record.try method
+    end
   end
-  #
-  # # Set attr accessors
-  # mattr_accessor :model_config
-  #
-  # # Set config options
-  # @@model_config = SeoMeta.new
-  #
-  # # Setup module
-  # def self.model_setup
-  #   yield model_config
-  # end
 end
