@@ -1,5 +1,8 @@
 module ActiveSeo
   class SeoMeta
+    include ActionView::Helpers::SanitizeHelper
+    include ActiveSeo::Helpers
+
     attr_accessor :record, :config
 
     # Initializer method
@@ -27,11 +30,18 @@ module ActiveSeo
       attribute = :seo_description
       defaults  = [:content, :description, :excerpt, :body]
 
-      attribute_fallbacks_for(attribute, defaults, config.description_fallback)
+      description = attribute_fallbacks_for(attribute, defaults, config.description_fallback)
+      strip_tags(description)
     end
 
     def seo_keywords
-      
+      text = record.seo_keywords
+
+      if text.blank? and config.generate_keywords
+        text = seo_description
+      end
+
+      generate_keywords(text)
     end
 
     def attribute_fallbacks_for(attribute, defaults, fallback)

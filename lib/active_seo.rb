@@ -1,6 +1,8 @@
 require 'active_support'
+require 'action_view'
 require 'hashie'
 require 'active_delegate'
+require 'active_seo/helpers'
 require 'active_seo/meta'
 require 'active_seo/models/seo_metum'
 require 'active_seo/seo_meta'
