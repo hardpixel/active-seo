@@ -1,4 +1,11 @@
-class SeoMetum < ActiveRecord::Base
-  # Belongs associations
-  belongs_to :seoable, polymorphic: true, optional: true
+module ActiveSeo
+  module Models
+    class SeoMetum < ActiveRecord::Base
+      # Set table name
+      self.table_name = 'seo_meta'
+
+      # Belongs associations
+      belongs_to :seoable, polymorphic: true, optional: true
+    end
+  end
 end
