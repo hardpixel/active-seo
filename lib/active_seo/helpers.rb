@@ -2,6 +2,8 @@ module ActiveSeo
   module Helpers
     # Generate an array of keywords
     def generate_keywords(text)
+      return [] unless text
+
       text     = strip_tags(text)
       keywords = text.scan(/\w+/)
       keywords = keywords.group_by { |item| item }

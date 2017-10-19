@@ -9,9 +9,12 @@ ActiveSeo.setup do |config|
 end
 
 ActiveSeo.opengraph_setup do |config|
-  # config.type = 'website'
+  # config.type      = 'website'
+  # config.site_name = 'Site name'
 end
 
 ActiveSeo.twitter_setup do |config|
-  # config.card = 'summary'
+  # config.card    = 'summary'
+  # config.site    = 'Site Twitter handle'
+  # config.creator = 'Author Twitter handle'
 end

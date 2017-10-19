@@ -7,10 +7,14 @@ module ActiveSeo
       include ActiveDelegate
 
       # Set class attributes
-      class_attribute :seo_config, instance_predicate: false
+      class_attribute :seo_config,       instance_predicate: false
+      class_attribute :opengraph_config, instance_predicate: false
+      class_attribute :twitter_config,   instance_predicate: false
 
       # Set class attibute defaults
-      self.seo_config = ActiveSeo.config
+      self.seo_config       = ActiveSeo.config
+      self.opengraph_config = ActiveSeo.opengraph_config
+      self.twitter_config   = ActiveSeo.twitter_config
 
       # Has associations
       has_one :active_seo_metum, as: :seoable, class_name: 'ActiveSeo::Models::SeoMetum', autosave: true, dependent: :destroy
@@ -26,6 +30,14 @@ module ActiveSeo
       def seo_setup(options={})
         self.seo_config = seo_config.merge ActiveSeo::Config.new(options)
         define_seo_validations
+      end
+
+      def opengraph_meta(options={})
+        self.opengraph_config = opengraph_config.merge Hashie::Mash.new(options)
+      end
+
+      def twitter_meta(options={})
+        self.twitter_config = twitter_config.merge Hashie::Mash.new(options)
       end
 
       # Set validations
