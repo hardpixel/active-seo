@@ -6,15 +6,15 @@ ActiveSeo.setup do |config|
   # config.title_fallback       = true
   # config.description_fallback = true
   # config.generate_keywords    = true
-end
 
-ActiveSeo.opengraph_setup do |config|
-  # config.type      = 'website'
-  # config.site_name = 'Site name'
-end
+  # config.opengraph_setup do |og|
+  #   og.type      = 'website'
+  #   og.site_name = 'Site Name'
+  # end
 
-ActiveSeo.twitter_setup do |config|
-  # config.card    = 'summary'
-  # config.site    = 'Site Twitter handle'
-  # config.creator = 'Author Twitter handle'
+  # config.twitter_setup do |tw|
+  #   tw.card    = 'summary'
+  #   tw.site    = '@site'
+  #   tw.creator = '@author'
+  # end
 end

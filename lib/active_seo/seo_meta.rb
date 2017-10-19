@@ -1,93 +1,84 @@
 module ActiveSeo
   class SeoMeta
-    include ActionView::Helpers::SanitizeHelper
     include ActiveSeo::Helpers
 
-    attr_accessor :record, :config
+    attr_accessor :record, :config, :opengraph, :twitter
 
     # Initializer method
     def initialize(record, config)
-      @record = record
-      @config = config
+      @record    = record
+      @config    = config
+      @opengraph = config.opengraph
+      @twitter   = config.twitter
     end
 
     # Set base seo meta
     def result
-      data = methods.select { |m| m.to_s.starts_with? 'seo_' }
-      data = data.map { |i| [i.to_s.sub('seo_', '').to_sym, send(i)] }
-
-      Hash[data]
+      data = [:title, :description, :keywords, :noindex, :nofollow, :og, :twitter]
+      Hash[data.map { |i| [i, send(i)] }]
     end
 
-    def seo_title
+    def title
       attribute = :seo_title
       defaults  = [:title, :name]
 
       attribute_fallbacks_for(attribute, defaults, config.title_fallback)
     end
 
-    def seo_description
+    def description
       attribute = :seo_description
       defaults  = [:content, :description, :excerpt, :body]
 
-      description = attribute_fallbacks_for(attribute, defaults, config.description_fallback)
-      strip_tags(description.to_s) if description
-      description
+      attribute_fallbacks_for(attribute, defaults, config.description_fallback)
     end
 
-    def seo_keywords
+    def keywords
       text = record.try :seo_keywords
+      text = "#{title} #{description}" if generate_keywords?(text)
 
-      if text.blank? and config.generate_keywords
-        text = seo_description
-      end
-
-      generate_keywords(text)
+      helpers.generate_keywords(text)
     end
 
-    def seo_noindex
+    def noindex
       record.seo_noindex || false
     end
 
-    def seo_nofollow
+    def nofollow
       record.seo_noindex || false
     end
 
-    def seo_og
-      og_meta = record_class.opengraph_config
-
-      og_meta.title       = seo_title unless og_meta.title.present?
-      og_meta.description = seo_description unless og_meta.description.present?
-
-      og_meta
+    def og
     end
 
-    def seo_twitter
-      twitter_meta = record_class.twitter_config
-
-      twitter_meta
+    def twitter
     end
 
-    def attribute_fallbacks_for(attribute, defaults, fallback)
-      candidates = [attribute]
+    private
 
-      case fallback
-      when TrueClass
-        candidates.concat(defaults)
-      when Array
-        candidates.concat(fallback)
+      def helpers
+        ActiveSeo::Helpers
       end
 
-      attribute_fallbacks(candidates)
-    end
+      def generate_keywords?(text=nil)
+        config.generate_keywords and text.blank?
+      end
 
-    def attribute_fallbacks(candidates)
-      method = candidates.find { |item| record.try(item).present? }
-      record.try method rescue nil
-    end
+      def attribute_fallbacks_for(attribute, defaults, fallback)
+        candidates = [attribute]
 
-    def record_class
-      record.class.name.classify.safe_constantize
-    end
+        case fallback
+        when TrueClass
+          candidates.concat(defaults)
+        when Array
+          candidates.concat(fallback)
+        end
+
+        attribute_fallbacks(candidates)
+      end
+
+      def attribute_fallbacks(candidates)
+        method = candidates.find { |item| record.try(item).present? }
+        helpers.strip_tags(record.try(method).to_s) unless method.nil?
+      end
   end
 end

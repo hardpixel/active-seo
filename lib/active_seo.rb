@@ -11,34 +11,35 @@ require 'active_seo/version'
 module ActiveSeo
   # Config class
   class Config < Hashie::Dash
+    # Set properties and defaults
     property :title_limit,          default: 70
     property :description_limit,    default: 160
     property :keywords_limit,       default: 255
     property :title_fallback,       default: true
     property :description_fallback, default: true
     property :generate_keywords,    default: true
+    property :opengraph,            default: {}
+    property :twitter,              default: {}
+
+    def opengraph_setup(&block)
+      self.opengraph = Hashie::Mash.new
+      yield self.opengraph
+    end
+
+    def twitter_setup(&block)
+      self.twitter = Hashie::Mash.new
+      yield self.twitter
+    end
   end
 
   # Set attr accessors
-  mattr_accessor :config, :opengraph_config, :twitter_config
+  mattr_accessor :config
 
   # Set config options
-  @@config           = Config.new
-  @@opengraph_config = Hashie::Mash.new
-  @@twitter_config   = Hashie::Mash.new
+  @@config = Config.new
 
   # Setup module config
   def self.setup
     yield config
-  end
-
-  # Setup module opengraph config
-  def self.opengraph_setup
-    yield opengraph_config
-  end
-
-  # Setup module opengraph config
-  def self.twitter_setup
-    yield twitter_config
   end
 end

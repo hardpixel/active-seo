@@ -7,14 +7,10 @@ module ActiveSeo
       include ActiveDelegate
 
       # Set class attributes
-      class_attribute :seo_config,       instance_predicate: false
-      class_attribute :opengraph_config, instance_predicate: false
-      class_attribute :twitter_config,   instance_predicate: false
+      class_attribute :seo_config, instance_predicate: false
 
       # Set class attibute defaults
-      self.seo_config       = ActiveSeo.config
-      self.opengraph_config = ActiveSeo.opengraph_config
-      self.twitter_config   = ActiveSeo.twitter_config
+      self.seo_config = ActiveSeo.config
 
       # Has associations
       has_one :active_seo_metum, as: :seoable, class_name: 'ActiveSeo::Models::SeoMetum', autosave: true, dependent: :destroy
@@ -24,20 +20,13 @@ module ActiveSeo
 
       # Add validations
       define_seo_validations
+      before_validation :normalize_keywords, if: :seo_keywords?
     end
 
     class_methods do
       def seo_setup(options={})
         self.seo_config = seo_config.merge ActiveSeo::Config.new(options)
         define_seo_validations
-      end
-
-      def opengraph_meta(options={})
-        self.opengraph_config = opengraph_config.merge Hashie::Mash.new(options)
-      end
-
-      def twitter_meta(options={})
-        self.twitter_config = twitter_config.merge Hashie::Mash.new(options)
       end
 
       # Set validations
@@ -51,5 +40,11 @@ module ActiveSeo
     def seo_meta
       @seo_meta ||= ActiveSeo::SeoMeta.new(self, seo_config).result
     end
+
+    private
+
+      def normalize_keywords
+        self.seo_keywords = ActiveSeo::Helpers.sanitize_keywords(seo_keywords)
+      end
   end
 end
