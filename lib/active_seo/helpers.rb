@@ -10,7 +10,7 @@ module ActiveSeo
         keywords = text.to_s.scan(/\w+/)
         keywords = keywords.group_by { |item| item }
         keywords = Hash[keywords.sort_by { |_k, v| -v.size }]
-        keywords = keywords.keys.select { |item| item.size > 3 }
+        keywords = keywords.keys.select { |item| item.size > 1 }
 
         keywords.map(&:downcase)
       end
