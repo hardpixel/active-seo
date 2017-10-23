@@ -7,10 +7,12 @@ module ActiveSeo
       include ActiveDelegate
 
       # Set class attributes
-      class_attribute :seo_config, instance_predicate: false
+      class_attribute :seo_config,      instance_predicate: false
+      class_attribute :seo_meta_parser, instance_predicate: false
 
       # Set class attibute defaults
-      self.seo_config = ActiveSeo.config
+      self.seo_config      = ActiveSeo.config
+      self.seo_meta_parser = 'ActiveSeo::MetaParser'
 
       # Has associations
       has_one :active_seo_metum, as: :seoable, class_name: 'ActiveSeo::Models::SeoMetum', autosave: true, dependent: :destroy
@@ -20,13 +22,19 @@ module ActiveSeo
 
       # Add validations
       define_seo_validations
-      before_validation :normalize_keywords, if: :seo_keywords?
+      before_validation { ActiveSeo::Helpers.sanitize_keywords(seo_keywords) if seo_keywords? }
     end
 
     class_methods do
+      # Setup seo
       def seo_setup(options={})
         self.seo_config = seo_config.merge ActiveSeo::Config.new(options)
         define_seo_validations
+      end
+
+      # Set meta parser
+      def seo_parser(parser)
+        self.seo_meta_parser = parser
       end
 
       # Set validations
@@ -38,13 +46,7 @@ module ActiveSeo
     end
 
     def seo_meta
-      @seo_meta ||= ActiveSeo::SeoMeta.new(self, seo_config).result
+      @seo_meta ||= ActiveSeo::SeoMeta.new(self).result
     end
-
-    private
-
-      def normalize_keywords
-        self.seo_keywords = ActiveSeo::Helpers.sanitize_keywords(seo_keywords)
-      end
   end
 end
