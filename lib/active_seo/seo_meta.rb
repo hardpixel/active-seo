@@ -1,15 +1,12 @@
 module ActiveSeo
   class SeoMeta
-    include ActiveSeo::Helpers
-
-    attr_accessor :record, :config, :opengraph, :twitter
+    attr_accessor :record, :config, :parser
 
     # Initializer method
-    def initialize(record, config)
-      @record    = record
-      @config    = config
-      @opengraph = config.opengraph
-      @twitter   = config.twitter
+    def initialize(record)
+      @record = record
+      @config = record.class.seo_config
+      @parser = locate_meta_parser.new(record)
     end
 
     # Set base seo meta
@@ -44,16 +41,24 @@ module ActiveSeo
     end
 
     def nofollow
-      record.seo_noindex || false
+      record.seo_nofollow || false
     end
 
     def og
+      parser.og_meta
     end
 
     def twitter
+      parser.twitter_meta
     end
 
     private
+
+      def locate_meta_parser
+        "#{record.class.seo_meta_parser}".safe_constantize ||
+        "#{record.class.name}SeoParser".safe_constantize   ||
+        'ActiveSeo::MetaParser'.constantize
+      end
 
       def helpers
         ActiveSeo::Helpers
