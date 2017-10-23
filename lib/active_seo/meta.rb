@@ -11,8 +11,7 @@ module ActiveSeo
       class_attribute :seo_meta_parser, instance_predicate: false
 
       # Set class attibute defaults
-      self.seo_config      = ActiveSeo.config
-      self.seo_meta_parser = 'ActiveSeo::MetaParser'
+      self.seo_config = ActiveSeo.config
 
       # Has associations
       has_one :active_seo_metum, as: :seoable, class_name: 'ActiveSeo::Models::SeoMetum', autosave: true, dependent: :destroy
