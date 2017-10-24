@@ -74,6 +74,8 @@ module ActiveSeo
         case fallback
         when TrueClass
           candidates.concat(defaults)
+        when Symbol
+          candidates << fallback
         when Array
           candidates.concat(fallback)
         end
