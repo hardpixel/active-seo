@@ -6,7 +6,7 @@ require 'active_seo/helpers'
 require 'active_seo/parser'
 require 'active_seo/meta_parser'
 require 'active_seo/meta'
-require 'active_seo/models/seo_metum'
+require 'active_seo/seo_metum'
 require 'active_seo/seo_meta'
 require 'active_seo/version'
 
