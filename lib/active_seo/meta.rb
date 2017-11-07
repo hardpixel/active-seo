@@ -8,7 +8,7 @@ module ActiveSeo
 
       # Set class attributes
       class_attribute :seo_config, instance_predicate: false
-      class_attribute :seo_meta_contextualizer, instance_predicate: false
+      class_attribute :seo_context, instance_predicate: false
 
       # Set class attibute defaults
       self.seo_config = ActiveSeo.config
@@ -32,8 +32,8 @@ module ActiveSeo
       end
 
       # Set meta contextualizer
-      def seo_contextualizer(contextualizer)
-        self.seo_meta_contextualizer = contextualizer
+      def seo_contextualizer(name)
+        self.seo_context = name
       end
 
       # Set validations

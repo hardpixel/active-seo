@@ -1,24 +1,59 @@
 module ActiveSeo
-  module Contextualizer
-    extend ActiveSupport::Concern
+  class Contextualizer
+    include ActiveSeo::Contextualize
 
-    included do
-      # Set class attributes
-      class_attribute :model_og_meta
-      class_attribute :model_twitter_meta
-
-      self.model_og_meta      = {}
-      self.model_twitter_meta = {}
+    def initialize(record)
+      @record    = record
+      @config    = record.class.seo_config
+      @opengraph = config.opengraph.merge(model_og_meta)
+      @twitter   = config.twitter.merge(model_twitter_meta)
     end
 
-    class_methods do
-      def og_meta(key, options)
-        self.model_og_meta[key] = options
+    def og_meta
+      parse_meta(opengraph).deep_symbolize_keys
+    end
+
+    def twitter_meta
+      parse_meta(twitter).deep_symbolize_keys
+    end
+
+    private
+
+      def parse_meta(options)
+        meta = {}
+
+        if options.is_a? Hash
+          options.each do |key, value|
+            meta[key] = parse_values(key, value)
+          end
+        else
+          meta[key] = parse_values(key, value)
+        end
+
+        meta
       end
 
-      def twitter_meta(key, options)
-        self.model_twitter_meta[key] = options
+      def parse_values(key, value)
+        data = nil
+
+        case value
+        when Symbol
+          data = get_record_value value
+        when Proc
+          data = call_record_proc value
+        else
+          data = value
+        end
+
+        data
       end
-    end
+
+      def get_record_value(attribute)
+        try(attribute) || record.try(attribute)
+      end
+
+      def call_record_proc(proc_method)
+        proc_method.call record
+      end
   end
 end

@@ -1,12 +1,12 @@
 module ActiveSeo
   class SeoMeta
-    attr_accessor :record, :config, :contextualizer
+    attr_accessor :record, :config, :context
 
     # Initializer method
     def initialize(record)
-      @record         = record
-      @config         = record.class.seo_config
-      @contextualizer = locate_meta_contextualizer.new(record)
+      @record  = record
+      @config  = record.class.seo_config
+      @context = contextualizer.new(record)
     end
 
     # Set base seo meta
@@ -45,19 +45,19 @@ module ActiveSeo
     end
 
     def og
-      contextualizer.og_meta
+      context.og_meta
     end
 
     def twitter
-      contextualizer.twitter_meta
+      context.twitter_meta
     end
 
     private
 
-      def locate_meta_contextualizer
-        "#{record.class.seo_meta_contextualizer}".safe_constantize ||
-        "#{record.class.name}SeoContextualizer".safe_constantize   ||
-        'ActiveSeo::MetaContextualizer'.constantize
+      def contextualizer
+        "#{record.class.seo_context}".safe_constantize ||
+        "#{record.class.name}Contextualizer".safe_constantize ||
+        'ActiveSeo::Contextualizer'.constantize
       end
 
       def helpers
