@@ -45,11 +45,11 @@ module ActiveSeo
     end
 
     def og
-      context.og_meta
+      @config.opengraph.merge(context.og_meta)
     end
 
     def twitter
-      context.twitter_meta
+      @config.twitter.merge(context.twitter_meta)
     end
 
     private
