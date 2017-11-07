@@ -10,7 +10,7 @@ Optimize ActiveRecord models with support for SEO, Twitter and Open Graph meta.
 
 Add this line to your application's Gemfile:
 
-```console
+```ruby
 gem 'active_seo'
 ```
 
