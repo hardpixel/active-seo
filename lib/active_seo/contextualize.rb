@@ -15,11 +15,11 @@ module ActiveSeo
 
     class_methods do
       def og_meta(key, options)
-        self.model_og_meta[key] = options
+        self.model_og_meta = self.model_og_meta.merge(key => options)
       end
 
       def twitter_meta(key, options)
-        self.model_twitter_meta[key] = options
+        self.model_twitter_meta = self.model_twitter_meta.merge(key => options)
       end
     end
   end
