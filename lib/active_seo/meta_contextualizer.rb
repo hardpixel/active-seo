@@ -1,6 +1,6 @@
 module ActiveSeo
-  class MetaParser
-    include ActiveSeo::Parser
+  class MetaContextualizer
+    include ActiveSeo::Contextualizer
     attr_accessor :record, :config, :opengraph, :twitter
 
     def initialize(record)

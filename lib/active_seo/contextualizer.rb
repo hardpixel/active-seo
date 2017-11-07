@@ -1,5 +1,5 @@
 module ActiveSeo
-  module Parser
+  module Contextualizer
     extend ActiveSupport::Concern
 
     included do

@@ -7,8 +7,8 @@ module ActiveSeo
       include ActiveDelegate
 
       # Set class attributes
-      class_attribute :seo_config,      instance_predicate: false
-      class_attribute :seo_meta_parser, instance_predicate: false
+      class_attribute :seo_config, instance_predicate: false
+      class_attribute :seo_meta_contextualizer, instance_predicate: false
 
       # Set class attibute defaults
       self.seo_config = ActiveSeo.config
@@ -31,9 +31,9 @@ module ActiveSeo
         define_seo_validations
       end
 
-      # Set meta parser
-      def seo_parser(parser)
-        self.seo_meta_parser = parser
+      # Set meta contextualizer
+      def seo_contextualizer(contextualizer)
+        self.seo_meta_contextualizer = contextualizer
       end
 
       # Set validations
