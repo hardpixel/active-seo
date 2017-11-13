@@ -16,49 +16,43 @@ gem 'active_seo'
 
 And then execute:
 
-```console
-$ bundle
-```
+    $ bundle
 
 Or install it yourself as:
 
-```console
-$ gem install active_seo
-```
+    $ gem install active_seo
 
 Then run the generator that will create a migration for the SeoMetum model and an initializer:
 
-```console
-$ rails g active_seo:install
-```
+    $ rails g active_seo:install
 
 And finally run the migrations:
 
-```console
-$ rails db:migrate
-```
+    $ rails db:migrate
 
 ## Usage
 
-To add SEO meta support to an ActiveRecord model include the `ActiveSeo::Meta` Concern:
+To add SEO meta support to an ActiveRecord model include the `ActiveSeo::Meta` Concern or use the `has_seo` class method:
 
 ```ruby
 class Page < ApplicationRecord
+  # Using concern
   include ActiveSeo::Meta
+
+  # Or using `has_seo` class method
+  has_seo
 end
 ```
 
-This way SeoMetum's attributes will be automatically delegated by your model with the `seo` prefix.
-
-E.g. in your the form:
+SeoMetum's attributes will be automatically delegated by your model with the `seo` prefix and you can use them in forms:
 
 ```erb
 <%= form_for @page do |f| %>
   <%= f.text_field :seo_title %>
-  <%= f.text_area :seo_description %>
-  <%= f.text_area :seo_keywords %>
-  <%= f.check_box :seo_noindex %>
-  <%= f.check_box :seo_nofollow %>
+  <%= f.text_area  :seo_description %>
+  <%= f.text_area  :seo_keywords %>
+  <%= f.check_box  :seo_noindex %>
+  <%= f.check_box  :seo_nofollow %>
 <% end %>
 ```
 
@@ -76,7 +70,7 @@ To get all SEO attributes:
 
 ## Configuration
 
-The install generator will create an initializer, which contains the following:
+The install generator will create an initializer:
 
 ```ruby
 ActiveSeo.setup do |config|
@@ -103,35 +97,41 @@ end
 
 You can set global defaults for attribute validations, automatic meta generation, OpenGraph and Twitter meta.
 
-Settings `title_fallback` and `description_fallback` can also accept either a `Symbol` which could be another model attribute or method, or an `Array` of attributes/methods to grab values from in order to autogenerate the title and description attributes.
+Settings `title_fallback` and `description_fallback` can be a `Symbol` or an `Array` of symbols that reference a model attribute/method which will be used to autogenerate the title and description attributes. When using an `Array` the first attribute that returns a value will be used.
 
-This behavior can also be configured on a model level, so in your Page model you could do something like this:
+This behavior can also be configured on a model level:
 
 ```ruby
 class Page < ApplicationRecord
+  # Using concern
   include ActiveSeo::Meta
 
-  # Set SEO config
+  # With `seo_setup` method
   seo_setup title_fallback: :name, description_fallback: [:content, :excerpt]
+
+  # Or using `has_seo` class method
+  has_seo title_fallback: :name, description_fallback: [:content, :excerpt]
 end
 ```
 
-## OpenGraph and Twitter meta
+## OpenGraph and Twitter
 
-If you want to define non-global OpenGraph and Twitter configurations you can create a custom meta contextualizer.
-
-ActiveSeo will look for a class defined in the model e.g.:
+If you want to define non-global OpenGraph and Twitter configurations you can create a custom meta contextualizer. ActiveSeo will look for a class defined in the model:
 
 ```ruby
 class Page < ApplicationRecord
+  # Using concern
   include ActiveSeo::Meta
 
-  # Set meta contextualizer
+  # With `seo_contextualizer` method
   seo_contextualizer 'CustomContextualizer'
+
+  # Or using `has_seo` class method
+  has_seo contextualizer: 'CustomContextualizer'
 end
 ```
 
-or for a class located at `app/contextualizers` with a name like `PageContextualizer`.
+Or for a class located in `app/contextualizers` with a name like `ModelContextualizer`.
 
 ```ruby
 class PageContextualizer < ActiveSeo::Contextualizer
@@ -152,8 +152,6 @@ class PageContextualizer < ActiveSeo::Contextualizer
 end
 ```
 
-#### Notes
-
 Inside the contextualizer you can define values using a `Proc` which gives you access to the record, a `Symbol` which will look for an attibute or method first inside the contextualizer and then in the model, or a `String` for a static value.
 
 ## Printing SEO meta
@@ -168,9 +166,7 @@ So, if you're using Meta Tags you can do the following:
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
