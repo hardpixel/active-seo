@@ -4,8 +4,8 @@ class CreateSeoMeta < ActiveRecord::Migration[5.0]
       t.string  :title
       t.text    :description
       t.text    :keywords
-      t.boolean :noindex
-      t.boolean :nofollow
+      t.boolean :noindex,      default: false
+      t.boolean :nofollow,     default: false
       t.integer :seoable_id,   null: false
       t.string  :seoable_type, null: false
 
