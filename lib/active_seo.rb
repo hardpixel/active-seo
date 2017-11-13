@@ -15,6 +15,7 @@ module ActiveSeo
   autoload :Meta,           'active_seo/meta'
   autoload :SeoMeta,        'active_seo/seo_meta'
   autoload :SeoMetum,       'active_seo/seo_metum'
+  autoload :Loader,         'active_seo/loader'
 
   # Set attr accessors
   mattr_accessor :config
@@ -26,4 +27,8 @@ module ActiveSeo
   def self.setup
     yield config
   end
+end
+
+ActiveSupport.on_load(:active_record) do
+  include ActiveSeo::Loader
 end
