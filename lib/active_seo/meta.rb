@@ -14,14 +14,30 @@ module ActiveSeo
       self.seo_config = ActiveSeo.config
 
       # Has associations
-      has_one :active_seo_metum, as: :seoable, class_name: 'ActiveSeo::SeoMetum', autosave: true, dependent: :destroy
+      has_one :seo_metum, as: :seoable, class_name: 'ActiveSeo::SeoMetum', autosave: true, dependent: :destroy
 
       # Delegate attributes
-      delegate_attributes to: :active_seo_metum, prefix: 'seo', allow_nil: true
+      delegate_attributes to: :seo_metum, prefix: 'seo', allow_nil: true
 
       # Add validations
       define_seo_validations
-      before_validation { ActiveSeo::Helpers.sanitize_keywords(seo_keywords) if seo_keywords? }
+
+      # Action callbacks
+      before_validation do
+        ActiveSeo::Helpers.sanitize_keywords(seo_keywords) if seo_keywords?
+      end
+
+      before_save do
+        seo_foreign = self.class.seo_meta_attribute_names.map(&:to_s)
+        seo_current = seo_foreign.map { |n| send(n) }
+        seo_foreign = seo_foreign.map { |a| a.sub('seo_', '') }
+        seo_default = ActiveSeo::SeoMetum.column_defaults.select { |n, _d| seo_foreign.include?(n) }.values
+        seo_changes = (seo_current - seo_default).reject { |v| (v.is_a?(String) && v.blank?) || v.nil? }
+
+        if seo_changes.empty?
+          self.seo_metum = nil
+        end
+      end
     end
 
     class_methods do
