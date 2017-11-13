@@ -2,16 +2,19 @@ require 'active_support'
 require 'action_view'
 require 'hashie'
 require 'active_delegate'
-require 'active_seo/helpers'
-require 'active_seo/contextualize'
-require 'active_seo/contextualizer'
-require 'active_seo/meta'
-require 'active_seo/seo_metum'
-require 'active_seo/seo_meta'
 require 'active_seo/version'
 
 module ActiveSeo
+  extend ActiveSupport::Concern
 
+  # Autoload modules
+  autoload :Config,         'active_seo/config'
+  autoload :Helpers,        'active_seo/helpers'
+  autoload :Contextualize,  'active_seo/contextualize'
+  autoload :Contextualizer, 'active_seo/contextualizer'
+  autoload :Meta,           'active_seo/meta'
+  autoload :SeoMeta,        'active_seo/seo_meta'
+  autoload :SeoMetum,       'active_seo/seo_metum'
 
   # Set attr accessors
   mattr_accessor :config
