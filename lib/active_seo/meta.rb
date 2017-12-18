@@ -43,7 +43,7 @@ module ActiveSeo
     class_methods do
       # Setup seo
       def seo_setup(options={})
-        self.seo_config = seo_config.merge ActiveSeo::Config.new(options)
+        self.seo_config = ActiveSeo::Config.new(options.reverse_merge(seo_config))
         define_seo_validations
       end
 
