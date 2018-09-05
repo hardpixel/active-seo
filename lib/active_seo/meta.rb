@@ -51,7 +51,7 @@ module ActiveSeo
 
       # Check if seo meta has locale accessors
       def seo_locale_accessors?
-        @seo_class_name ||= ActiveSeo.config.locale_accessors
+        @seo_locale_accessors ||= ActiveSeo.config.locale_accessors
       end
 
       # Setup seo
