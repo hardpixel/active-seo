@@ -14,7 +14,7 @@ module ActiveSeo
       self.seo_config = ActiveSeo.config
 
       # Has associations
-      has_one :seo_metum, as: :seoable, class_name: 'ActiveSeo::SeoMetum', autosave: true, dependent: :destroy
+      has_one :seo_metum, as: :seoable, class_name: seo_class_name, autosave: true, dependent: :destroy
 
       # Delegate attributes
       delegate_attributes to: :seo_metum, prefix: 'seo', allow_nil: true
@@ -41,6 +41,13 @@ module ActiveSeo
     end
 
     class_methods do
+      # Get seo meta model class name
+      def seo_class_name
+        @seo_class_name ||= begin
+          ('SeoMetum'.safe_constantize || ActiveSeo.config.class_name).to_s
+        end
+      end
+
       # Setup seo
       def seo_setup(options={})
         self.seo_config = ActiveSeo::Config.new(options.reverse_merge(seo_config))
