@@ -1,10 +1,11 @@
 module ActiveSeo
   class SeoMeta
-    attr_accessor :record, :config, :context
+    attr_accessor :record, :config, :context, :locale
 
     # Initializer method
-    def initialize(record)
+    def initialize(record, locale=I18n.locale)
       @record  = record
+      @locale  = locale
       @config  = record.class.seo_config
       @context = contextualizer.new(record)
     end
@@ -73,7 +74,7 @@ module ActiveSeo
       end
 
       def localized_attribute(attr_name)
-        localized_name = "#{attr_name}_#{I18n.locale}"
+        localized_name = "#{attr_name}_#{locale}"
         localized? && record.respond_to?(localized_name) ? localized_name : attr_name
       end
 

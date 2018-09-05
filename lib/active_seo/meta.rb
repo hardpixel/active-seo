@@ -22,6 +22,9 @@ module ActiveSeo
       # Add validations
       define_seo_validations
 
+      # Add locale accessors
+      define_seo_locale_accessors
+
       # Action callbacks
       before_validation do
         ActiveSeo::Helpers.sanitize_keywords(seo_keywords) if seo_keywords?
@@ -67,6 +70,20 @@ module ActiveSeo
         validates :seo_title, length: { maximum: seo_config.title_limit }, allow_blank: true
         validates :seo_description, length: { maximum: seo_config.description_limit }, allow_blank: true
         validates :seo_keywords, length: { maximum: seo_config.keywords_limit }, allow_blank: true
+      end
+
+      # Define localized seo_meta methods
+      def define_seo_locale_accessors
+        if seo_locale_accessors?
+          I18n.available_locales.each do |locale|
+            attr_name = "seo_meta_#{locale.to_s.downcase.tr('-', '_')}"
+
+            define_method attr_name do
+              instance_variable_get("@#{attr_name}") ||
+              instance_variable_set("@#{attr_name}", ActiveSeo::SeoMeta.new(self, locale).result)
+            end
+          end
+        end
       end
     end
 
