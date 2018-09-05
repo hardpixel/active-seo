@@ -17,7 +17,7 @@ module ActiveSeo
       has_one :seo_metum, as: :seoable, class_name: seo_class_name, autosave: true, dependent: :destroy
 
       # Delegate attributes
-      delegate_attributes to: :seo_metum, prefix: 'seo', allow_nil: true
+      delegate_attributes to: :seo_metum, prefix: 'seo', allow_nil: true, localized: seo_locale_accessors?
 
       # Add validations
       define_seo_validations
@@ -45,6 +45,10 @@ module ActiveSeo
       def seo_class_name
         @seo_class_name ||= ActiveSeo.config.class_name
       end
+
+      # Check if seo meta has locale accessors
+      def seo_locale_accessors?
+        @seo_class_name ||= ActiveSeo.config.locale_accessors
       end
 
       # Setup seo

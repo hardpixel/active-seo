@@ -2,6 +2,7 @@ module ActiveSeo
   class Config < Hashie::Dash
     # Set properties and defaults
     property :class_name,           default: 'ActiveSeo::SeoMetum'
+    property :locale_accessors,     default: false
     property :title_limit,          default: 70
     property :description_limit,    default: 160
     property :keywords_limit,       default: 255

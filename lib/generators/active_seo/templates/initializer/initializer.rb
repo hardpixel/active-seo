@@ -1,5 +1,6 @@
 ActiveSeo.setup do |config|
   # config.class_name           = 'ActiveSeo::SeoMetum'
+  # config.locale_accessors     = false
   # config.title_limit          = 70
   # config.description_limit    = 160
   # config.keywords_limit       = 255
