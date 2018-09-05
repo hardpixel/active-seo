@@ -43,9 +43,8 @@ module ActiveSeo
     class_methods do
       # Get seo meta model class name
       def seo_class_name
-        @seo_class_name ||= begin
-          ('SeoMetum'.safe_constantize || ActiveSeo.config.class_name).to_s
-        end
+        @seo_class_name ||= ActiveSeo.config.class_name
+      end
       end
 
       # Setup seo
