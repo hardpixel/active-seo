@@ -16,21 +16,21 @@ module ActiveSeo
     end
 
     def title
-      attribute = :seo_title
-      defaults  = [:title, :name]
+      attribute = localized_attribute(:seo_title)
+      defaults  = localized_attributes(:title, :name)
 
       attribute_fallbacks_for(attribute, defaults, config.title_fallback)
     end
 
     def description
-      attribute = :seo_description
-      defaults  = [:content, :description, :excerpt, :body]
+      attribute = localized_attribute(:seo_description)
+      defaults  = localized_attributes(:content, :description, :excerpt, :body)
 
       attribute_fallbacks_for(attribute, defaults, config.description_fallback)
     end
 
     def keywords
-      text = record.try :seo_keywords
+      text = record.try localized_attribute(:seo_keywords)
       text = "#{title} #{description}" if generate_keywords?(text)
 
       helpers.generate_keywords(text)
@@ -64,8 +64,21 @@ module ActiveSeo
         ActiveSeo::Helpers
       end
 
+      def localized?
+        record.class.seo_locale_accessors?
+      end
+
       def generate_keywords?(text=nil)
         config.generate_keywords and text.blank?
+      end
+
+      def localized_attribute(attr_name)
+        localized_name = "#{attr_name}_#{I18n.locale}"
+        localized? && record.respond_to?(localized_name) ? localized_name : attr_name
+      end
+
+      def localized_attributes(*attr_names)
+        localized? ? attr_names.map { |a| localized_attribute(a) } : attr_names
       end
 
       def attribute_fallbacks_for(attribute, defaults, fallback)
