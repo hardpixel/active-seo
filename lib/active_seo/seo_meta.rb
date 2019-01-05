@@ -55,51 +55,51 @@ module ActiveSeo
 
     private
 
-      def contextualizer
-        "#{record.class.seo_context}".safe_constantize ||
-        "#{record.class.name}Contextualizer".safe_constantize ||
-        'ActiveSeo::Contextualizer'.constantize
+    def contextualizer
+      "#{record.class.seo_context}".safe_constantize ||
+      "#{record.class.name}Contextualizer".safe_constantize ||
+      'ActiveSeo::Contextualizer'.constantize
+    end
+
+    def helpers
+      ActiveSeo::Helpers
+    end
+
+    def localized?
+      record.class.seo_locale_accessors?
+    end
+
+    def generate_keywords?(text=nil)
+      config.generate_keywords and text.blank?
+    end
+
+    def localized_attribute(attr_name)
+      localized_name = "#{attr_name}_#{locale}"
+      localized? && record.respond_to?(localized_name) ? localized_name : attr_name
+    end
+
+    def localized_attributes(*attr_names)
+      localized? ? attr_names.map { |a| localized_attribute(a) } : attr_names
+    end
+
+    def attribute_fallbacks_for(attribute, defaults, fallback)
+      candidates = [attribute]
+
+      case fallback
+      when TrueClass
+        candidates.concat(defaults)
+      when Symbol
+        candidates << fallback
+      when Array
+        candidates.concat(fallback)
       end
 
-      def helpers
-        ActiveSeo::Helpers
-      end
+      attribute_fallbacks(candidates)
+    end
 
-      def localized?
-        record.class.seo_locale_accessors?
-      end
-
-      def generate_keywords?(text=nil)
-        config.generate_keywords and text.blank?
-      end
-
-      def localized_attribute(attr_name)
-        localized_name = "#{attr_name}_#{locale}"
-        localized? && record.respond_to?(localized_name) ? localized_name : attr_name
-      end
-
-      def localized_attributes(*attr_names)
-        localized? ? attr_names.map { |a| localized_attribute(a) } : attr_names
-      end
-
-      def attribute_fallbacks_for(attribute, defaults, fallback)
-        candidates = [attribute]
-
-        case fallback
-        when TrueClass
-          candidates.concat(defaults)
-        when Symbol
-          candidates << fallback
-        when Array
-          candidates.concat(fallback)
-        end
-
-        attribute_fallbacks(candidates)
-      end
-
-      def attribute_fallbacks(candidates)
-        method = candidates.find { |item| record.try(item).present? }
-        helpers.strip_tags(record.try(method).to_s) unless method.nil?
-      end
+    def attribute_fallbacks(candidates)
+      method = candidates.find { |item| record.try(item).present? }
+      helpers.strip_tags(record.try(method).to_s) unless method.nil?
+    end
   end
 end

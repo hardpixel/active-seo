@@ -19,41 +19,41 @@ module ActiveSeo
 
     private
 
-      def parse_meta(options)
-        meta = {}
+    def parse_meta(options)
+      meta = {}
 
-        if options.is_a? Hash
-          options.each do |key, value|
-            meta[key] = parse_values(key, value)
-          end
-        else
+      if options.is_a? Hash
+        options.each do |key, value|
           meta[key] = parse_values(key, value)
         end
-
-        meta
+      else
+        meta[key] = parse_values(key, value)
       end
 
-      def parse_values(key, value)
-        data = nil
+      meta
+    end
 
-        case value
-        when Symbol
-          data = get_record_value value
-        when Proc
-          data = call_record_proc value
-        else
-          data = value
-        end
+    def parse_values(key, value)
+      data = nil
 
-        data
+      case value
+      when Symbol
+        data = get_record_value value
+      when Proc
+        data = call_record_proc value
+      else
+        data = value
       end
 
-      def get_record_value(attribute)
-        try(attribute) || record.try(attribute)
-      end
+      data
+    end
 
-      def call_record_proc(proc_method)
-        proc_method.call record
-      end
+    def get_record_value(attribute)
+      try(attribute) || record.try(attribute)
+    end
+
+    def call_record_proc(proc_method)
+      proc_method.call record
+    end
   end
 end
