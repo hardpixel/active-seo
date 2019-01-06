@@ -3,29 +3,19 @@ module ActiveSeo
     extend ActiveSupport::Concern
 
     included do
-      # Include modules
       include ActiveDelegate
 
-      # Set class attributes
       class_attribute :seo_config, instance_predicate: false
       class_attribute :seo_context, instance_predicate: false
 
-      # Set class attibute defaults
       self.seo_config = ActiveSeo.config
 
-      # Has associations
       has_one :seo_metum, as: :seoable, class_name: seo_class_name, autosave: true, dependent: :destroy
-
-      # Delegate attributes
       delegate_attributes to: :seo_metum, prefix: 'seo', allow_nil: true, localized: seo_locale_accessors?
 
-      # Add validations
       define_seo_validations
-
-      # Add locale accessors
       define_seo_locale_accessors
 
-      # Action callbacks
       before_validation do
         ActiveSeo::Helpers.sanitize_keywords(seo_keywords) if seo_keywords?
       end
@@ -44,35 +34,29 @@ module ActiveSeo
     end
 
     class_methods do
-      # Get seo meta model class name
       def seo_class_name
         @seo_class_name ||= ActiveSeo.config.class_name
       end
 
-      # Check if seo meta has locale accessors
       def seo_locale_accessors?
         @seo_locale_accessors ||= ActiveSeo.config.locale_accessors
       end
 
-      # Setup seo
       def seo_setup(options={})
         self.seo_config = ActiveSeo::Config.new(options.reverse_merge(seo_config))
         define_seo_validations
       end
 
-      # Set meta contextualizer
       def seo_contextualizer(name)
         self.seo_context = name
       end
 
-      # Set validations
       def define_seo_validations
         validates :seo_title, length: { maximum: seo_config.title_limit }, allow_blank: true
         validates :seo_description, length: { maximum: seo_config.description_limit }, allow_blank: true
         validates :seo_keywords, length: { maximum: seo_config.keywords_limit }, allow_blank: true
       end
 
-      # Define localized seo_meta methods
       def define_seo_locale_accessors
         if seo_locale_accessors?
           I18n.available_locales.each do |locale|

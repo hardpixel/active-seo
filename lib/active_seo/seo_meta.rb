@@ -2,7 +2,6 @@ module ActiveSeo
   class SeoMeta
     attr_accessor :record, :config, :context, :locale
 
-    # Initializer method
     def initialize(record, locale=I18n.locale)
       @record  = record
       @locale  = locale
@@ -10,7 +9,6 @@ module ActiveSeo
       @context = contextualizer.new(record)
     end
 
-    # Set base seo meta
     def result
       data = [:title, :description, :keywords, :noindex, :nofollow, :og, :twitter]
       Hash[data.map { |i| [i, send(i)] }]

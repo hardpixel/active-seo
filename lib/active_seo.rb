@@ -7,7 +7,6 @@ require 'active_seo/version'
 module ActiveSeo
   extend ActiveSupport::Concern
 
-  # Autoload modules
   autoload :Config,         'active_seo/config'
   autoload :Helpers,        'active_seo/helpers'
   autoload :Contextualize,  'active_seo/contextualize'
@@ -17,13 +16,10 @@ module ActiveSeo
   autoload :SeoMetum,       'active_seo/seo_metum'
   autoload :Loader,         'active_seo/loader'
 
-  # Set attr accessors
   mattr_accessor :config
 
-  # Set config options
   @@config = Config.new
 
-  # Setup module config
   def self.setup
     yield config
   end

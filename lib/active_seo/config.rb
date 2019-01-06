@@ -8,7 +8,6 @@ module ActiveSeo
   end
 
   class Config < Hashie::Dash
-    # Set properties and defaults
     property :class_name,           default: 'ActiveSeo::SeoMetum'
     property :locale_accessors,     default: false
     property :title_limit,          default: 70

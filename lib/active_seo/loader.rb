@@ -3,7 +3,6 @@ module ActiveSeo
     extend ActiveSupport::Concern
 
     class_methods do
-      # Helper to include ActiveSeo::Meta
       def has_seo(options={})
         include ActiveSeo::Meta
 

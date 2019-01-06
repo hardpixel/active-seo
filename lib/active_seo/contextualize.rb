@@ -5,7 +5,6 @@ module ActiveSeo
     included do
       attr_accessor :record, :config, :opengraph, :twitter
 
-      # Set class attributes
       class_attribute :model_og_meta
       class_attribute :model_twitter_meta
 

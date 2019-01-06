@@ -3,7 +3,6 @@ module ActiveSeo
     include ActionView::Helpers::SanitizeHelper
 
     class << self
-      # Generate an array of keywords
       def generate_keywords(text)
         return [] unless text
 
@@ -20,7 +19,6 @@ module ActiveSeo
         text.scan(/\w+/).join(' ').downcase
       end
 
-      # Strip tags
       def strip_tags(html)
         full_sanitizer.sanitize(html)
       end
