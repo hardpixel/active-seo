@@ -58,14 +58,14 @@ module ActiveSeo
       end
 
       def define_seo_locale_accessors
-        if seo_locale_accessors?
-          I18n.available_locales.each do |locale|
-            attr_name = "seo_meta_#{locale.to_s.downcase.tr('-', '_')}"
+        return unless seo_locale_accessors?
 
-            define_method attr_name do
-              instance_variable_get("@#{attr_name}") ||
-              instance_variable_set("@#{attr_name}", ActiveSeo::SeoMeta.new(self, locale).result)
-            end
+        I18n.available_locales.each do |locale|
+          attr_name = "seo_meta_#{locale.to_s.downcase.tr('-', '_')}"
+
+          define_method attr_name do
+            instance_variable_get("@#{attr_name}") ||
+            instance_variable_set("@#{attr_name}", ActiveSeo::SeoMeta.new(self, locale).result)
           end
         end
       end
