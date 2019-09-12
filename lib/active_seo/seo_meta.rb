@@ -92,7 +92,12 @@ module ActiveSeo
         candidates.concat(fallback)
       end
 
-      attribute_fallbacks(candidates)
+      name = attribute.to_s.remove('seo_')
+      size = config[:"#{name}_limit"]
+      text = attribute_fallbacks(candidates)
+      text = text.truncate(size, separator: ' ') if size
+
+      text
     end
 
     def attribute_fallbacks(candidates)

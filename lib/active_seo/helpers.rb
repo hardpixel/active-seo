@@ -20,7 +20,7 @@ module ActiveSeo
       end
 
       def strip_tags(html)
-        full_sanitizer.sanitize(html)
+        full_sanitizer.sanitize(html).gsub(/\s+/, ' ').strip
       end
     end
   end
