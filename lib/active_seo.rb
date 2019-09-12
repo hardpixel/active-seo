@@ -1,5 +1,5 @@
 require 'active_support'
-require 'action_view'
+require 'stringex'
 require 'hashie'
 require 'active_delegate'
 require 'active_seo/version'

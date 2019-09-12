@@ -1,7 +1,5 @@
 module ActiveSeo
   module Helpers
-    include ActionView::Helpers::SanitizeHelper
-
     class << self
       def generate_keywords(text)
         return [] unless text
@@ -20,7 +18,7 @@ module ActiveSeo
       end
 
       def strip_tags(html)
-        full_sanitizer.sanitize(html).gsub(/\s+/, ' ').strip
+        html.strip_html_tags.squish
       end
     end
   end
