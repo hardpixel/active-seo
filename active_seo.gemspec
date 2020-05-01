@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activerecord', '>= 5.0', '< 7.0'
   spec.add_dependency 'active_delegate', '>= 1.0'
-  spec.add_dependency 'stringex', '>= 2.0'
+  spec.add_dependency 'rails-html-sanitizer', '>= 1.0'
   spec.add_dependency 'hashie', '>= 3.5'
 
   spec.add_development_dependency 'bundler', '~> 2.0'

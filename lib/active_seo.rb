@@ -1,5 +1,5 @@
 require 'active_support'
-require 'stringex'
+require 'rails-html-sanitizer'
 require 'hashie'
 require 'active_delegate'
 require 'active_seo/version'

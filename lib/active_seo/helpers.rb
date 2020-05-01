@@ -18,7 +18,8 @@ module ActiveSeo
       end
 
       def strip_tags(html)
-        html.strip_html_tags.squish
+        sanitizer = Rails::Html::FullSanitizer.new
+        sanitizer.sanitize(html).squish
       end
     end
   end
